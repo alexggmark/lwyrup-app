@@ -4,12 +4,12 @@
       <h1 class="title">
         lwyrup-app
       </h1>
-      <form>
+      <div>
         <input v-model="textTitle" type="text" placeholder="title">
         <input v-model="textArea" type="text" placeholder="text">
-        <button type="submit" @click="validateData">Click</button>
-      </form>
-      <div>{{ textArea }}</div>
+        <button type="submit" @click="submitData">Click</button>
+      </div>
+      <div v-if="showEmpty">Nothing here but us chickens</div>
       <div class="container">
         <div v-for="(item, index) in output" :key="'item' + index" class="item">
           <h2>{{ item.title }}</h2>
@@ -28,7 +28,8 @@ export default {
   data () {
     return {
       textTitle: '',
-      textArea: ''
+      textArea: '',
+      showEmpty: false
     }
   },
   async asyncData(context) {
@@ -37,22 +38,33 @@ export default {
       output: data.data.reverse()
     }
   },
+  watch: {
+    output () {
+      if (this.output.length > 0) {
+        this.showEmpty = false;
+        return;
+      }
+      this.showEmpty = true;
+    }
+  },
   methods: {
-    validateData() {
+    async submitData () {
       if (this.textTitle === '' || this.textArea === '') { return; }
-
-      this.submitData();
-    },
-    submitData () {
-      axios.post('https://localhost:3000/test', {
+      await axios.post('https://localhost:3000/test', {
         title: this.textTitle,
         content: this.textArea
       })
+      this.updateData();
     },
-    removeItem (id) {
-      axios.delete('https://localhost:3000/test/' + id)
+    async removeItem (id) {
+      await axios.delete('https://localhost:3000/test/' + id)
+      this.updateData();
+    },
+    async updateData() {
+      const data = await axios.get('https://localhost:3000/test')
+      this.output = data.data.reverse()
     }
-  }
+  },
 }
 </script>
 
