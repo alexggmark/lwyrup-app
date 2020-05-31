@@ -1,72 +1,75 @@
 <template>
   <div class="container">
     <div>
-      <logo />
       <h1 class="title">
         lwyrup-app
       </h1>
-      <h2 class="subtitle">
-        My stupendous Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+      <form>
+        <input v-model="textTitle" type="text" placeholder="title">
+        <input v-model="textArea" type="text" placeholder="text">
+        <button type="submit" @click="validateData">Click</button>
+      </form>
+      <div>{{ textArea }}</div>
+      <div class="container">
+        <div v-for="(item, index) in output" :key="'item' + index" class="item">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.content }}</p>
+          <button @click="removeItem(item._id)">X</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import axios from 'axios'
 
 export default {
-  components: {
-    Logo
+  data () {
+    return {
+      textTitle: '',
+      textArea: ''
+    }
+  },
+  async asyncData(context) {
+    const data = await axios.get('https://localhost:3000/test')
+    return {
+      output: data.data.reverse()
+    }
+  },
+  methods: {
+    validateData() {
+      if (this.textTitle === '' || this.textArea === '') { return; }
+
+      this.submitData();
+    },
+    submitData () {
+      axios.post('https://localhost:3000/test', {
+        title: this.textTitle,
+        content: this.textArea
+      })
+    },
+    removeItem (id) {
+      axios.delete('https://localhost:3000/test/' + id)
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+  h2 {
+    border-bottom: 2px solid black;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+  .item {
+    background-color: #eeeeee;
+    border-radius: 5px;
+    margin: 1rem;
+    padding: 1rem;
+    width: 500px;
+  }
 }
 </style>
