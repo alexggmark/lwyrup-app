@@ -2,10 +2,18 @@ const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
+const fs = require('fs')
+const path = require('path')
+const https = require('https')
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
 config.dev = process.env.NODE_ENV !== 'production'
+
+const options = config.dev ? {
+    key: fs.readFileSync(path.resolve(__dirname, './devCerts/server.key')),
+    cert: fs.readFileSync(path.resolve(__dirname, './devCerts/server.crt'))
+  } : {}
 
 async function start () {
   // Init Nuxt.js
@@ -24,7 +32,13 @@ async function start () {
   app.use(nuxt.render)
 
   // Listen the server
-  app.listen(port, host)
+  https
+    .createServer(options, app)
+    .listen(port, () => {
+      console.log('Running server')
+    })
+  // app
+  //   .listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
