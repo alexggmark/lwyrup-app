@@ -28,8 +28,11 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    // '@/plugins/axios'
+    '@/plugins/axios'
   ],
+  axios: {
+    baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : '209.97.133.53'
+  },
   /*
   ** Nuxt.js dev-modules
   */

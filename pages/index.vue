@@ -33,7 +33,7 @@ export default {
     }
   },
   async asyncData(context) {
-    const data = await axios.get('/test')
+    const data = await axios.get('https://localhost:3000/test')
     return {
       output: data.data.reverse()
     }
