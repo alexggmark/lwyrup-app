@@ -31,7 +31,7 @@ module.exports = {
     '@/plugins/axios'
   ],
   axios: {
-    baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : '209.97.133.53'
+    baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'https://209.97.133.53'
   },
   /*
   ** Nuxt.js dev-modules
