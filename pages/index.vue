@@ -33,7 +33,7 @@ export default {
     }
   },
   async asyncData(context) {
-    const data = await axios.get('https://localhost:3000/test')
+    const data = await axios.get('/test')
     return {
       output: data.data.reverse()
     }
@@ -50,18 +50,18 @@ export default {
   methods: {
     async submitData () {
       if (this.textTitle === '' || this.textArea === '') { return; }
-      await axios.post('https://localhost:3000/test', {
+      await axios.post('/test', {
         title: this.textTitle,
         content: this.textArea
       })
       this.updateData();
     },
     async removeItem (id) {
-      await axios.delete('https://localhost:3000/test/' + id)
+      await axios.delete('/test/' + id)
       this.updateData();
     },
     async updateData() {
-      const data = await axios.get('https://localhost:3000/test')
+      const data = await axios.get('/test')
       this.output = data.data.reverse()
     }
   },
