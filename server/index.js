@@ -26,10 +26,10 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true})
 const config = require('../nuxt.config.js')
 config.dev = process.env.NODE_ENV !== 'production'
 
-const options = config.dev ? {
-    key: fs.readFileSync(path.resolve(__dirname, './devCerts/server.key')),
-    cert: fs.readFileSync(path.resolve(__dirname, './devCerts/server.crt'))
-  } : {}
+const options = {
+  key: fs.readFileSync(path.resolve(__dirname, './devCerts/server.key')),
+  cert: fs.readFileSync(path.resolve(__dirname, './devCerts/server.crt'))
+}
 
 // Set routes
 app.use(bodyParser.json())
